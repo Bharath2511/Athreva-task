@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "4.1.4",
+    "title": " Athreva task APIs",
+    "description": "These APIs are developed using Node.js with base URL - http://localhost:5001. For Authorization token, use User Login API and provide the credentials to get the token from the response."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "URL not found",
+        "content": {
+          "application/json": {
+            "example": {
+              "code": 404,
+              "message": "The requested URL was not found. Please check the URL and try again.",
+              "status": "Not Found"
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "API key is missing or invalid",
+        "headers": {
+          "WWW_Authenticate": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Login user and generate token",
+        "description": "generate token to access all apis",
+        "tags": ["User Login"],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "203": {
+            "description": "Empty payload"
+          },
+          "206": {
+            "description": "Username or Password not provided"
+          },
+          "403": {
+            "description": "Wrong credentials"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter user email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "password"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["User registration"],
+        "summary": "Register user",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "enter user name"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "enter user email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "password"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/userDetails": {
+      "post": {
+        "tags": ["User details"],
+        "summary": "Get the user details",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter user email"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/travel/{id}": {
+      "put": {
+        "tags": ["Travel Booking"],
+        "summary": "Availability of cabs",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": "true",
+            "description": "ENTER USER ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "pickup": {
+                    "type": "string",
+                    "description": "enter pickup location"
+                  },
+                  "drop": {
+                    "type": "string",
+                    "description": "enter drop location"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Un Athorized"
+          },
+          "403": {
+            "description": "Reached maximum bookings"
+          }
+        }
+      }
+    },
+    "/user/history": {
+      "post": {
+        "tags": ["User Bookings"],
+        "summary": "Get the booking history ofuser",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter user email"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No history found!"
+          }
+        }
+      }
+    }
+  }
+}
